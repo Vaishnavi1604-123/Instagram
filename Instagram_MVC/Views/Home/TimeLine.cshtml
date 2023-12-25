@@ -1,0 +1,164 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<ViewPostsModel>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Your Posts - Instagram</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Instagram.styles.css" asp-append-version="true" />
+    <style>
+        .post-box {
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+            .user-info img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .user-info span {
+                font-weight: bold;
+            }
+
+        .post-details {
+            margin-top: 10px;
+        }
+
+        .post-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .post-content p {
+            margin-top: 10px;
+        }
+
+        .post-content {
+            text-align: center;
+        }
+
+        /* Center content and add space on the left and right */
+        body {
+            padding: 20px; /* Adjust the padding as needed */
+        }
+
+        .container {
+            max-width: 500px; /* Adjust the max-width as needed */
+            margin: 0 auto; /* Center the container */
+        }
+
+        .like-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .like-symbol {
+            color: gray;
+            font-size: 20px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+            .like-symbol:hover {
+                color: red;
+            }
+
+        .like-count {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Home</h2>
+
+            <!-- Add Post button -->
+            <a class="btn btn-primary" href="/Home/Post">Add Post</a>
+            <a asp-controller="Home" asp-action="ViewMyPost">My Post</a></p>
+
+        </div>
+
+        @if (Model.Count > 0)
+        {
+            @foreach (var post in Model)
+            {
+                <!-- Code for displaying each post box -->
+                <div class="post-box">
+                    <!-- Common content for both image and text posts -->
+                    <div class="user-info">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.Profilepic)" alt="Profile Picture" />
+                        <span>@post.Username</span>
+                    </div>
+
+                    <div class="post-details">
+                        <p>@post.DateTime</p>
+                    </div>
+
+                    <!-- Specific content for image posts -->
+
+                    <div class="post-content">
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(post.ImageData)" alt="Post Image" />
+
+                    </div>
+                    @*<div class="like-button">
+            <button class="btn btn-primary" onclick="likePost('@post.PostId')">Like</button>
+            <span class="likes-count">@post.Likes</span>
+            </div>*@
+                    <div class="post-details">
+                        <p>@post.Text</p>
+                    </div>
+                    <div class="like-section">
+                        <span class="like-symbol" onclick="likePost('@post.id')">&#10084;</span>
+                        <span id="likeCount_@post.id" class="like-count">@post.Likes Likes</span>
+                    </div>
+                </div>
+            }
+
+
+        }
+        else
+        {
+            <p>No Posts</p>
+        }
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        function likePost(Id) {
+            $.ajax({
+                url: "/Home/LikePost?Id=" + Id,
+                type: "POST", // or "GET" depending on your server-side implementation
+                success: function (data) {
+                    // Handle the success response here (if needed)
+                    // For example, you can update the like count without refreshing the page
+                    var likeCountElement = $("#likeCount_" + Id);
+                    likeCountElement.text(data.likes + " Likes");
+                },
+                error: function (error) {
+                    console.error("Error liking post: ", error);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

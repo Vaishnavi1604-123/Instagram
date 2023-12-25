@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] -Instagram</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Instagram_MVC.styles.css" asp-append-version="true" />
+   
+    <style>
+        .profile-icon {
+            width: 40px; /* Adjust the width as needed */
+            height: 40px; /* Adjust the height as needed */
+            object-fit: cover;
+            border: 2px solid #fff; /* Optional: Add a border */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="TimeLine">Instagram</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @* <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>*@
+                        <li class="nav-item">
+                            @if (!ViewContext.RouteData.Values["Controller"].ToString().Equals("Home", StringComparison.OrdinalIgnoreCase) ||
+                            !ViewContext.RouteData.Values["Action"].ToString().Equals("Login", StringComparison.OrdinalIgnoreCase))
+                            {
+                                <form id="logoutForm" method="get" action="@Url.Action("Logout", "Home")" class="nav-link">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-primary">Logout</button>
+                                </form>
+                            }
+                        </li>
+
+                    </ul>
+                    <div class="navbar-nav">
+                        @if (ViewContext.RouteData.Values["Controller"].ToString().Equals("Instagram", StringComparison.OrdinalIgnoreCase) ||
+                        (ViewContext.RouteData.Values["Action"].ToString().Equals("Mainpage", StringComparison.OrdinalIgnoreCase)||
+                        (ViewContext.RouteData.Values["Action"].ToString().Equals("TimeLine", StringComparison.OrdinalIgnoreCase)
+                        || (ViewContext.RouteData.Values["Action"].ToString().Equals("ViewMyPost", StringComparison.OrdinalIgnoreCase)))))
+                       @* || (ViewContext.RouteData.Values["Action"].ToString().Equals("Post", StringComparison.OrdinalIgnoreCase))))))*@
+                        {
+                            <div class="user-profile">
+                                <span>Welcome @ViewBag.UserName</span>
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(@ViewBag.ImageData)" alt="Profile Picture" data-bs-toggle="dropdown" class="rounded-circle profile-icon" />
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a class="dropdown-item"  href=@Url.Action("TimeLine", "Home")>Home</a>
+                                    <a class="dropdown-item"  href=@Url.Action("ViewMyPost", "Home")>MyPost</a>
+                                    <div class="dropdown-divider" ></div>
+                                    <a class="dropdown-item" href=@Url.Action("Logout", "Home")>Logout</a>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @* <footer class="border-top footer text-muted">
+    <div class="container">
+    &copy; 2023 - Instagram_MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
+    </footer>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+

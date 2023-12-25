@@ -1,0 +1,51 @@
+﻿@model Instagram_MVC.Models.PostModel
+
+@if (ViewBag.Success != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewBag.Success
+    </div>
+}
+@if (ViewBag.Failure != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewBag.Failure
+    </div>
+}
+<a asp-controller="Home" asp-action="TimeLine">Back</a></p>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form asp-controller="Home" asp-action="Post" method="post" autocomplete="off" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label asp-for="Text" class="control-label"></label>
+                    <input asp-for="Text" type="Text" class="form-control" />
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImageFile" class="control-label">Upload Image</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <br />
+
+                <button type="submit" class="btn btn-primary">Post</button>
+            </form>
+           @* <div>
+                <p> <a asp-controller="Home" asp-action="Mainpage" >Back To Home</a></p>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+
+
+
